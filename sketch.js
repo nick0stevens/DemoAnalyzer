@@ -1,4 +1,4 @@
-let apiKey = 'tk_H9Rg9tqGkia65rwvbsMeYoUihS3UauB3xUNKg'; // Add your Thaura API key here
+let apiKey = 'tk_NjXdufLLXLabSZAo8DGGAnVXVxo5Cb2o8kgAN'; // Add your Thaura API key here
 
 let img;
 let isWaiting = false;
