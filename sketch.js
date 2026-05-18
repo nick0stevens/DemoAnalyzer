@@ -1,13 +1,12 @@
 let apiKey = 'tk_NjXdufLLXLabSZAo8DGGAnVXVxo5Cb2o8kgAN'; // Add your Thaura API key here
 
+
 let img;
 let isWaiting = false;
 let response = '';
 let base64Image = '';
 let imageLoaded = false;
 
-// Use a reliable CORS proxy
-const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 const THAURA_API = 'https://backend.thaura.ai/v1/chat/completions';
 
 async function setup() {
@@ -110,7 +109,7 @@ function getBase64Image(p5Img) {
   tempCanvas.image(p5Img, 0, 0);
   
   let dataURL = tempCanvas.canvas.toDataURL('image/jpeg', 0.8);
-  let base64 = dataURL.split(',')[1];
+  let base64 = dataURL.split(',');
   
   console.log('Base64 conversion complete. Data URL length:', dataURL.length);
   return base64;
@@ -146,16 +145,14 @@ async function sendImageToThaura() {
   try {
     console.log('Sending request to Thaura API...');
     
-    // Use the CORS proxy
-    const proxiedUrl = CORS_PROXY + THAURA_API;
-    
-    const apiResponse = await fetch(proxiedUrl, {
+    const apiResponse = await fetch(THAURA_API, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'X-Requested-With': 'XMLHttpRequest',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.9'
       },
       body: JSON.stringify({
         model: 'thaura',
@@ -187,8 +184,8 @@ async function sendImageToThaura() {
     console.log('API response data:', data);
     
     if (apiResponse.ok) {
-      if (data.choices && data.choices[0] && data.choices[0].message) {
-        response = data.choices[0].message.content;
+      if (data.choices && data.choices && data.choices.message) {
+        response = data.choices.message.content;
         console.log('Thaura response received:', response);
       } else {
         const errorMsg = 'No response from Thaura API';
