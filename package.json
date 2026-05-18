@@ -1,0 +1,12 @@
+{
+  "name": "thaura-p5js-app",
+  "version": "1.0.0",
+  "description": "p5.js app with Thaura API integration using Netlify Functions",
+  "scripts": {
+    "build": "echo 'No build step needed'",
+    "dev": "npm run build"
+  },
+  "devDependencies": {
+    "@netlify/plugin-functions-install-core": "^1.2.0"
+  }
+}
