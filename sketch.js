@@ -1,12 +1,12 @@
 let apiKey = 'tk_NjXdufLLXLabSZAo8DGGAnVXVxo5Cb2o8kgAN'; // Add your Thaura API key here
-
-
 let img;
 let isWaiting = false;
 let response = '';
 let base64Image = '';
 let imageLoaded = false;
 
+// CORS Proxy - using cors-anywhere as it's reliable
+const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 const THAURA_API = 'https://backend.thaura.ai/v1/chat/completions';
 
 async function setup() {
@@ -145,12 +145,18 @@ async function sendImageToThaura() {
   try {
     console.log('Sending request to Thaura API...');
     
-    const apiResponse = await fetch(THAURA_API, {
+    // Construct the proxied URL
+    const proxiedUrl = CORS_PROXY + THAURA_API;
+    
+    console.log('Using proxied URL:', proxiedUrl);
+    
+    const apiResponse = await fetch(proxiedUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'X-Requested-With': 'XMLHttpRequest', // Required for CORS proxy
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Accept': 'application/json',
         'Accept-Language': 'en-US,en;q=0.9'
       },
