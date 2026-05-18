@@ -214,3 +214,42 @@ async function sendImageToThaura() {
     console.log('API call completed. isWaiting:', isWaiting);
   }
 }
+
+async function sendImageToThaura() {
+  // ... existing code ...
+  
+  try {
+    // Direct call to your Netlify function (no CORS!)
+    const apiResponse = await fetch('/.netlify/functions/thaura-proxy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'thaura',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: 'Analyze this image and describe what you see...'
+              },
+              {
+                type: 'image_url',
+                image_url: {
+                  url: `data:image/jpeg;base64,${base64Image}`
+                }
+              }
+            ]
+          }
+        ],
+        max_tokens: 500
+      })
+    });
+    
+    const data = await apiResponse.json();
+    // ... rest of your code ...
+  }
+}
+
