@@ -7,7 +7,7 @@ let base64Image = '';
 let imageLoaded = false;
 
 // CORS Proxy - using cors-anywhere as it's reliable
-const CORS_PROXY = 'https://api.allorigins.win/get?url=';
+const CORS_PROXY = 'https://cors.lol/?url=';
 const THAURA_API = 'https://backend.thaura.ai/v1/chat/completions';
 
 async function setup() {
