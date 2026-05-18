@@ -6,8 +6,8 @@ let response = '';
 let base64Image = '';
 let imageLoaded = false;
 
-// Use a more reliable CORS proxy
-const CORS_PROXY = 'https://cors.bridged.cc/';
+// CORS Proxy - using cors-anywhere as it's reliable
+const CORS_PROXY = 'https://thingproxy.freeboard.io/';
 const THAURA_API = 'https://backend.thaura.ai/v1/chat/completions';
 
 async function setup() {
@@ -110,7 +110,7 @@ function getBase64Image(p5Img) {
   tempCanvas.image(p5Img, 0, 0);
   
   let dataURL = tempCanvas.canvas.toDataURL('image/jpeg', 0.8);
-  let base64 = dataURL.split(',')[1];
+  let base64 = dataURL.split(',');
   
   console.log('Base64 conversion complete. Data URL length:', dataURL.length);
   return base64;
@@ -156,7 +156,7 @@ async function sendImageToThaura() {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'X-Requested-With': 'XMLHttpRequest',
+        'X-Requested-With': 'XMLHttpRequest', // Required for CORS proxy
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Accept': 'application/json',
         'Accept-Language': 'en-US,en;q=0.9'
@@ -191,8 +191,8 @@ async function sendImageToThaura() {
     console.log('API response data:', data);
     
     if (apiResponse.ok) {
-      if (data.choices && data.choices[0] && data.choices[0].message) {
-        response = data.choices[0].message.content;
+      if (data.choices && data.choices && data.choices.message) {
+        response = data.choices.message.content;
         console.log('Thaura response received:', response);
       } else {
         const errorMsg = 'No response from Thaura API';
