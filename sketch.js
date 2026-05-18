@@ -6,8 +6,6 @@ let response = '';
 let base64Image = '';
 let imageLoaded = false;
 
-// Try a different CORS proxy - this one is more reliable
-const CORS_PROXY = 'https://api.allorigins.win/get?url=';
 const THAURA_API = 'https://backend.thaura.ai/v1/chat/completions';
 
 async function setup() {
@@ -110,7 +108,7 @@ function getBase64Image(p5Img) {
   tempCanvas.image(p5Img, 0, 0);
   
   let dataURL = tempCanvas.canvas.toDataURL('image/jpeg', 0.8);
-  let base64 = dataURL.split(',')[1];
+  let base64 = dataURL.split(',');
   
   console.log('Base64 conversion complete. Data URL length:', dataURL.length);
   return base64;
@@ -146,24 +144,6 @@ async function sendImageToThaura() {
   try {
     console.log('Sending request to Thaura API...');
     
-    // Encode the API URL to be sent through the proxy
-    const encodedUrl = encodeURIComponent(THAURA_API);
-    const proxyUrl = `${CORS_PROXY}${encodedUrl}`;
-    
-    console.log('Using proxy URL:', proxyUrl);
-    
-    // First, get the request options through the proxy
-    const optionsResponse = await fetch(proxyUrl);
-    const optionsData = await optionsResponse.json();
-    
-    if (!optionsResponse.ok) {
-      throw new Error(`Proxy error: ${optionsData.contents || optionsData.status?.text || 'Unknown error'}`);
-    }
-    
-    // The actual API call headers come from the proxy response
-    const apiHeaders = JSON.parse(optionsData.contents);
-    
-    // Now make the actual API call with the retrieved headers
     const apiResponse = await fetch(THAURA_API, {
       method: 'POST',
       headers: {
@@ -203,8 +183,8 @@ async function sendImageToThaura() {
     console.log('API response data:', data);
     
     if (apiResponse.ok) {
-      if (data.choices && data.choices[0] && data.choices[0].message) {
-        response = data.choices[0].message.content;
+      if (data.choices && data.choices && data.choices.message) {
+        response = data.choices.message.content;
         console.log('Thaura response received:', response);
       } else {
         const errorMsg = 'No response from Thaura API';
