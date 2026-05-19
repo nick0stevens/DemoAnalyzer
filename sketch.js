@@ -1,5 +1,4 @@
-
-let apiKey = 'tk_NjXdufLLXLabSZAo8DGGAnVXVxo5Cb2o8kgAN'; // Add your Thaura API key here
+let apiKey = 'tk_H9Rg9tqGkia65rwvbsMeYoUihS3UauB3xUNKg'; // Add your Thaura API key here
 
 let img;
 let isWaiting = false;
@@ -7,9 +6,7 @@ let response = '';
 let base64Image = '';
 let imageLoaded = false;
 
-// Use cors.lol - a reliable CORS proxy
-const CORS_PROXY = 'https://cors.lol/?url=';
-const THAURA_API = 'https://backend.thaura.ai/v1/chat/completions';
+const THAURA_PROXY = '/.netlify/functions/thaura-proxy';
 
 async function setup() {
   createCanvas(800, 600);
@@ -145,23 +142,12 @@ async function sendImageToThaura() {
   response = '';
   
   try {
-    console.log('Sending request to Thaura API...');
+    console.log('Sending request to Thaura...');
     
-    // Encode the target URL for the proxy
-    const encodedUrl = encodeURIComponent(THAURA_API);
-    const proxiedUrl = CORS_PROXY + encodedUrl;
-    
-    console.log('Using proxied URL:', proxiedUrl);
-    
-    const apiResponse = await fetch(proxiedUrl, {
+    const apiResponse = await fetch(THAURA_PROXY, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'X-Requested-With': 'XMLHttpRequest',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.9'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'thaura',
@@ -187,7 +173,6 @@ async function sendImageToThaura() {
     });
     
     console.log('API response status:', apiResponse.status);
-    console.log('API response headers:', apiResponse.headers);
     
     const data = await apiResponse.json();
     console.log('API response data:', data);
