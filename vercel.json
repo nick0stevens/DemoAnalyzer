@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "outputDirectory": ".",
+  "functions": {
+    "netlify/functions/thaura-proxy.js": {
+      "maxDuration": 30
+    }
+  }
+}
